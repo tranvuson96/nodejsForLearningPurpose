@@ -1,0 +1,24 @@
+{
+	"name": "nodejstester",
+	"version": "1.0.0",
+	"description": "NJS101x",
+	"main": "app.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "nodemon app.js",
+		"start-server": "node app.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/tranvuson96/nodejsForLearningPurpose.git"
+	},
+	"author": "Tran Vu Son",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/tranvuson96/nodejsForLearningPurpose/issues"
+	},
+	"homepage": "https://github.com/tranvuson96/nodejsForLearningPurpose#readme",
+	"devDependencies": {
+		"nodemon": "^2.0.15"
+	}
+}
