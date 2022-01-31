@@ -8,9 +8,9 @@ app.use((res, req, next) => {
 	next(); //alow does res to continue to the next middleware in line
 });
 
-app.use((res, req, next) => {
+app.use((req, res, next) => {
 	console.log("In another middleware");
-	// ...
+	res.send("<h1>Hello From Node.js</h1>");
 });
 
 const server = http.createServer(app);
