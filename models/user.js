@@ -93,7 +93,9 @@ class User {
 
     getOrders(){
         const db = getDb();
-        db.collection('orders')
+        return db.collection('orders')
+            .find({'user._id' : new ObjectId(this._id)})
+            .toArray();
     }
 
     static findByPk(userId) {
