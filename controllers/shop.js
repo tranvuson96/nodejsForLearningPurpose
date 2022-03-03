@@ -58,9 +58,12 @@ exports.postCart = (req, res, next) => {
   const prodId = req.body.productId;
   Product.findByPk(prodId)
     .then(product=>{
-      return req.user.addToCart(product)
+      return req.user.addToCart(product);
     })
-    .then(result=>console.log(result))
+    .then(result=>{
+      console.log(result);
+      res.redirect('/cart');
+    })
     .catch();
   // let fetchedCart;
   // let newQuantity = 1;
