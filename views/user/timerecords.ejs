@@ -1,0 +1,123 @@
+<%- include('../includes/head.ejs') %>
+    </head>
+
+    <body>
+        <%- include('../includes/navigation.ejs') %>
+            <main>
+                <% if(!users) { %>
+                    <h3>Nhân viên chưa làm ngày nào trong tháng hoặc lúc đấy nhân viên chưa
+                        vào công ty</h3>
+                    <% } else { %>
+                        <% users.forEach(user=>{ %>
+
+                            <h5>Ngày: <%= date.format(user.createdAt,'YYYY-MM-DD') %>
+                            </h5>
+                            <table class="table">
+                                <tr>
+                                    <th scope="col">Giờ bắt đầu</th>
+                                    <th scope="col">Giờ kết thúc</th>
+                                    <th scope="col">Nơi làm việc</th>
+                                    <th scope="col">Tổng số giờ đã làm</th>
+                                </tr>
+                                <% user.records.forEach(record=>{ %>
+                                    <% if(!record.recordId) { %>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <% } else { %>
+                                            <tr scope="row">
+                                                <td>
+                                                    <% if(!record.recordId.startAt){%>
+                                                        <% } else { %>
+                                                            <%=record.recordId.startAt.getHours() %>
+                                                                <% } %>
+                                                </td>
+                                                <td>
+                                                    <% if(!record.recordId.endAt){%>
+                                                        <% } else { %>
+                                                            <%=record.recordId.endAt.getHours() %>
+                                                                <% } %>
+                                                </td>
+                                                <td>
+                                                    <%= record.recordId.place %>
+                                                </td>
+                                                <td>
+                                                    <% if(!record.recordId.startAt){%>
+                                                        <% } else { %>
+                                                            <%= record.recordId.times.toFixed(4) %>
+                                                                <% } %>
+                                                </td>
+                                            </tr>
+                                            <% } %>
+                                                <% }); %>
+                            </table>
+                            <% if ((user.total-8)>0) { %>
+                                <p>Số giờ đã làm thêm: <%= user.total-8 %>
+                                </p>
+                                <% } else { %>
+                                    <p>Số giờ làm thiếu: <%= 8-user.total %>
+                                    </p>
+                                    <% } %>
+                                        <p>Tổng Số ngày nghỉ phép đã đăng ký và được chấp nhận <%=
+                                                user.registereddays %>
+                                        </p>
+                                        <table class="table">
+                                            <tr>
+                                                <th scope="col">Ngày đăng ký</th>
+                                                <th scope="col">Số giờ xin nghỉ</th>
+                                                <th scope="col">Số ngày xin nghỉ</th>
+                                            </tr>
+                                            <% if (!user.registers) { %>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <% } else { %>
+                                                    <tr scope="row">
+                                                        <td>
+                                                            <%= date.format(user.createdAt,'YYYY-MM-DD') %>
+                                                        </td>
+                                                        <td>
+                                                            <%= user.registeredhours %>
+                                                        </td>
+                                                        <td>
+                                                            <%= user.registereddays %>
+                                                        </td>
+                                                    </tr>
+                                                    <% } %>
+                                        </table>
+                                        <% }); %>
+                                            <% if((overTime)&&(lamthieu)&&(salary)){ %>
+                                                <h5>Chi tiết lương tháng</h5>
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <div class="col-3 col-sm-6">
+                                                            Lương cơ bản : <%= users[0].userId.salaryScale*3000000 %>
+                                                        </div>
+                                                        <div class="col-3 col-sm-6">
+                                                            giờ làm thêm : <%= overTime %>
+                                                        </div>
+                                                        <div class="col-3 col-sm-6">
+                                                            giờ làm thiếu : <%= lamthieu %>
+                                                        </div>
+                                                        <div class="col-3 col-sm-6">
+                                                            Tổng lương : <%= salary %>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <% } else { %>
+                                                    <h5>Lương tháng</h5>
+                                                    <form action="/timerecords" method="POST">
+                                                        <label for="month"></label>
+                                                        <input name="month" type="date" id="month" required>
+                                                        <input type="hidden" name="userId"
+                                                            value="<%= users[0].userId %>">
+                                                        <button type="submit" class="btn btn-primary">Hiển
+                                                            thị</button>
+                                                    </form>
+
+                                                    <% } %>
+                                                        <% } %>
+
+            </main>
+            <%- include('../includes/end.ejs') %>

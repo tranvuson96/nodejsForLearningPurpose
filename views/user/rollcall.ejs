@@ -1,0 +1,72 @@
+<%- include('../includes/head.ejs') %>
+    </head>
+
+    <body>
+        <%- include('../includes/navigation.ejs') %>
+            <main>
+                <% if(!user) { %>
+                    <h1>Bạn chưa tìm kiếm nhân viên</h1>
+                    <a href="/" class="btns">Nhấn vào đây để tìm</a>
+                    <% } else if (!working) { %>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <form action="/roll-call/<%= user._id %>?working=true" method="POST">
+                                        <label for="place">Nơi làm việc: </label>
+                                        <select name="place" id="place" required>
+                                            <option value="company">Công ty</option>
+                                            <option value="home">Nhà</option>
+                                            <option value="client">Khách hàng</option>
+                                        </select>
+                                        <input type="hidden" name="userId" value="<%= user._id %>">
+                                        <input type="hidden" name="name" value="<%= user.name %>">
+                                        <button type=" submit" class="btns">Bắt đầu điểm danh</button>
+                                    </form>
+                                    <a href="/timerecords/<%= user._id %>" class="btns">Thông tin giờ làm và
+                                        lương</a>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                    <% if ((user.records)==[]) { %>
+                                        <div></div>
+                                        <% } else { %>
+                                            <div class="card">
+                                                <div class="card__content">
+                                                    <p>Số giờ đã làm hôm nay <%= user.totalhourspday %>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <% } %>
+                                </div>
+                            </div>
+                        </div>
+                        <% } else if(working) { %>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-6">
+                                        <button class="btns active" type="button" disabled>Băt đấu điểm danh</button>
+                                    </div>
+                                    <div class="col-sm-12 col-md-6">
+                                        <div class="card">
+                                            <div class="card__header">
+                                                <h5>
+                                                    <%= user.userId.name %>
+                                                </h5>
+                                            </div>
+                                            <div class="card__content">
+                                                <p>Nơi làm việc: <%= user.place %>
+                                                </p>
+                                                <p>Bắt đầu làm lúc: <%= user.startAt %>
+                                                </p>
+                                                <form action="/exitwork/<%= user.userId._id %>" method="POST">
+                                                    <input type="hidden" value="<%= user.userId._id %>" name="userId">
+                                                    <input type="hidden" value="<%= user._id %>" name="recordId">
+                                                    <button type="submit" class="btns">Kết thúc làm</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <% } %>
+            </main>
+            <%- include('../includes/end.ejs') %>

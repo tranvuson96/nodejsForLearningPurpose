@@ -1,0 +1,68 @@
+<%- include('../includes/head.ejs') %>
+    </head>
+
+    <body>
+        <%- include('../includes/navigation.ejs') %>
+            <main>
+                <% if(!user) { %>
+                    <h1>Nothing in here</h1>
+
+                    <% } else { %>
+                        <form action="/covid-19/<%= user._id %>" method="POST">
+                            <div class="row g-3 align-items-center">
+                                <div class="col-auto">
+                                    <label for="bodyheat">Nhiệt độ cơ thể hiện tại</label>
+                                </div>
+                                <div class="col-auto">
+                                    <input type="number" min="0" name="bodyheat" id="bodyheat"><br>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row g-3 align-items-center">
+                                <div class="col-auto">
+                                    <label for="vaccintype">Bạn đã tiêm loại vaccin gì ?</label>
+                                </div>
+                                <div class="col-auto">
+                                    <input type="text" name="vaccintype" id="vaccintype">
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row g-3 align-items-center">
+                                <div class="col-auto">
+                                    <label for="ngaytiem">Bạn tiêm vào ngày nào ?</label>
+                                </div>
+                                <div class="col-auto">
+                                    <input type="date" name="ngaytiem">
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row g-3 align-items-center">
+                                <div class="col-auto">
+                                    <label for="shot">Đây là mũi</label>
+                                </div>
+                                <div class="col-auto">
+                                    <select name="shot" required>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row g-3 align-items-center">
+                                <div class="col-auto">
+                                    <label for="isPositive">Bạn có dương tính với covid không ?</label>
+                                </div>
+                                <div class="col-auto">
+                                    <input type="radio" name="isPositive" value="true"> Có
+                                </div>
+                                <div class="col-auto">
+                                    <input type="radio" name="isPositive" value="false"> Không
+                                </div>
+                            </div>
+                            <br>
+                            <input type="hidden" name="userId" value="user._id">
+                            <button class="btns" type="submit">Đăng ký thông tin</button>
+                        </form>
+                        <% } %>
+            </main>
+            <%- include('../includes/end.ejs') %>
