@@ -33,6 +33,7 @@ app.use(session({
     store: store
 }))
 
+// lab 8.10
 app.use((req,res,next)=>{
     if(!req.session.user) {
         return next();
