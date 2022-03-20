@@ -303,48 +303,52 @@ exports.exitWorkingMode = (req,res,next)=>{
     const recordId = req.body.recordId;
     const endAt = new Date();
     // tìm recordId rồi update 
-    Records.findById(recordId).then(record=>{
-        const times = date.subtract(endAt ,record.startAt).toHours();
-        record.endAt = endAt;
-        record.times = times;
-        record.save()
+    Records
+        .findById(recordId)
         .then(record=>{
-            // tìm tất cả record có trong ngày rồi tạo biến tính tổng
-            Records.find({
-                startAt:{
-                    $gte: today.toDate(),
-                    $lte:moment(today).endOf('day').toDate() 
-                    },
-                userId: userId
-                })
-            .then(records=>{
-                let total;
-                if(!records.length){
-                    return total=times;
-                } else {
-                total = records.reduce((a,b)=>(a+b.times),0);
-                let overTime=0;
-                    User.findById(userId).then(user=>{
-                        user.records.push({
-                        recordId:record._id,
-                        startAt: record.startAt,
-                        endAt: record.endAt,
-                        times: record.times
-                    });
-                    // trả về overTime nếu tổng số h làm trong ngày lớn hơn 8
-                    if(total>8){
-                        return overTime = total-8
-                    }
-                    user.overTime = overTime;
-                    user.totalhourspday = total;
-                    user.save();
-                }).then(()=>{
-                    res.redirect(`/roll-call/${userId}`)
-               })
-            }
+            const times = date.subtract(endAt ,record.startAt).toHours();
+            record.endAt = endAt;
+            record.times = times;
+            return record.save()
+        })
+        .then(result=>{
+            // tìm tất cả records có trong ngày
+            return Records.find({
+                    startAt:{
+                        $gte: today.toDate(),
+                        $lte:moment(today).endOf('day').toDate() 
+                        },
+                    userId: userId
             })
         })
-    })
+        .then(records=>{
+            // tạo biến total và check nếu có records thì tính tổng rồi lưu vào totalhourspday của user
+            let total;
+            let overTime;
+                // tính tổng 
+            if(records.length>0) {
+                total = records.reduce((a,b)=>a+b.times,0);     
+                if(total>8) {
+                    return overTime = 8-total;
+                }
+                // tìm user tương ứng rồi lưu thay đổi vào
+                User.findById(userId)
+                    .then(user=>{
+                        user.totalhourspday = total;
+                        user.overTime = overTime;
+                        return user.save();
+                    })
+                    .then(user=>{
+                        res.render('user/rollcall', {
+                            pageTitle: 'Roll Call',
+                            path: '/roll-call',
+                            user: user,
+                            working: false
+                        });
+                    })
+            } 
+        })
+        .catch(err=>console.log(err))
 };
 
 //render thông tin giờ làm của user

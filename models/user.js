@@ -39,8 +39,6 @@ const userSchema = new Schema({
         default:8,
         required: true
     },
-    records:[]
-    ,
     totalhourspday:{
         type: Number
     },
