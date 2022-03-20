@@ -233,12 +233,12 @@ form {
 }
 
 .user-message {
-  margin:auto;
+  margin: auto;
   width: 90%;
   border: 1px solid #4771fa;
   padding: 0.5rem;
   border-radius: 3px;
-  background: #8ea8fd;
+  background: #b9c9ff;
   text-align: center;
 }
 
