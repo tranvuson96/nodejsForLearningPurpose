@@ -42,6 +42,16 @@ exports.getProduct = (req, res, next) => {
 
 exports.getIndex = (req, res, next) => {
   const page = req.query.page;
+
+  // Fetch 10 instances/rows
+// Project.findAll({ limit: 10 });
+
+// Skip 8 instances/rows
+// Project.findAll({ offset: 8 });
+
+// Skip 5 instances and fetch the 5 after that
+// Project.findAll({ offset: 5, limit: 5 });
+
   Product.find()
     .skip((page - 1)* ITEMS_PER_PAGE)
     .limit(ITEMS_PER_PAGE)
