@@ -1,0 +1,24 @@
+<%- include('../includes/head.ejs') %>
+</head>
+
+<body>
+    <%- include('../includes/navigation.ejs') %>
+        <% if (!doc) { %> 
+            <h3>Nhân viên chưa đăng ký sức khỏe</h3>    
+        <% } else { %>
+            <div class="container d-flex">
+                <div class="w-25">
+                    <img src="/<%= doc.userId.imageUrl %>" class="img-thumbnail .img-fluid" alt="<%= doc.userId.name %>">
+                </div>
+                <div>
+                    <h5>Tên nhân viên: <%= doc.userId.name %></h5><br>
+                    <p>Thân nhiệt: <%= doc.bodyheat %></p><br>
+                    <p>Đã tiêm vaccin: <%= doc.vaccin.firstShot?.shottype %>, <%= doc.vaccin.secondShot?.shottype %></p><br>
+                    <p><%= doc.positiveWithCovid ? 'Có' : 'Không' %> dương tính với covid</p>
+                    <a href="/manager/covid-19/<%= doc._id %>" class="btns">Download PDF</a>
+                </div>
+            </div>
+        <% } %>
+        
+
+<%- include('../includes/end.ejs') %>

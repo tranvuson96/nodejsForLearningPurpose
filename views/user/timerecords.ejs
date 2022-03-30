@@ -1,0 +1,139 @@
+<%- include('../includes/head.ejs') %>
+    </head>
+
+    <body>
+        <%- include('../includes/navigation.ejs') %>
+            <main>
+                <% if(!users) { %>
+                    <h3>Nhân viên chưa làm ngày nào trong tháng hoặc lúc đấy nhân viên chưa vào công ty</h3>
+                <% } else { %>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-auto">
+                                <form action="/timerecords/<%= users[0].userId._id %>" method="POST">
+                                    <label for="daysPerPage">Hiển thị số ngày trên trang</label>
+                                    <select name="daysPerPage" id="daysPerPage">
+                                        <option value=1 <%= oldInput.daysPerPage == 1 ? 'selected' : '' %>>1</option>                             
+                                        <option value=2 <%= oldInput.daysPerPage == 2 ? 'selected' : '' %>>2</option>
+                                        <option value=3 <%= oldInput.daysPerPage == 3 ? 'selected' : '' %>>3</option>
+                                        <option value=4 <%= oldInput.daysPerPage == 4 ? 'selected' : '' %>>4</option>
+                                    </select>
+                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                    <button type="submit" class="btns">Thay đổi hiển thị</button>
+                                </form>
+                            </div>
+                            <div class="col-auto">
+                                <h3>Quản lý: <%= users[0].userId.manager.managerName %></h3>
+                                <p>id: <%= users[0].userId.manager.managerId %></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <% users.forEach(user=>{ %>
+                            
+                            <h5>Ngày: <%= date.format(user.createdAt,'YYYY-MM-DD') %>
+                            </h5>
+                            <table class="table">
+                                <tr>
+                                    <th scope="col">Giờ bắt đầu</th>
+                                    <th scope="col">Giờ kết thúc</th>
+                                    <th scope="col">Nơi làm việc</th>
+                                    <th scope="col">Tổng số giờ đã làm</th>
+                                </tr>
+                                <% user.records.forEach(record=>{ %>
+                                    <% if(!record.recordId) { %>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    <% } else { %>
+                                            <tr scope="row">
+                                                <td>
+                                                    <% if(!record.recordId.startAt){%>
+                                                    <% } else { %>
+                                                        <%=record.recordId.startAt.getHours() %>
+                                                    <% } %>
+                                                </td>
+                                                <td>
+                                                    <% if(!record.recordId.endAt){%>
+                                                    <% } else { %>
+                                                        <%=record.recordId.endAt.getHours() %>
+                                                    <% } %>
+                                                </td>
+                                                <td>
+                                                    <%= record.recordId.place %>
+                                                </td>
+                                                <td>
+                                                    <% if(!record.recordId.startAt){%>
+                                                    <% } else { %>
+                                                        <%= record.recordId.times.toFixed(4) %>
+                                                    <% } %>
+                                                </td>
+                                            </tr>
+                                    <% } %>
+                                <% }); %>
+                            </table>
+                            <% if ((user.total-8)>0) { %>
+                                <p>Số giờ đã làm thêm: <%= user.total-8 %>
+                                </p>
+                                <% } else { %>
+                                    <p>Số giờ làm thiếu: <%= 8-user.total %>
+                                    </p>
+                                    <% } %>
+                                        <p>Tổng Số ngày nghỉ phép đã đăng ký và được chấp nhận <%=
+                                                user.registereddays %>
+                                        </p>
+                                        <table class="table">
+                                            <tr>
+                                                <th scope="col">Ngày đăng ký</th>
+                                                <th scope="col">Số giờ xin nghỉ</th>
+                                                <th scope="col">Số ngày xin nghỉ</th>
+                                            </tr>
+                                            <% if (!user.registers) { %>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <% } else { %>
+                                                    <tr scope="row">
+                                                        <td>
+                                                            <%= date.format(user.createdAt,'YYYY-MM-DD') %>
+                                                        </td>
+                                                        <td>
+                                                            <%= user.registeredhours %>
+                                                        </td>
+                                                        <td>
+                                                            <%= user.registereddays %>
+                                                        </td>
+                                                    </tr>
+                                                    <% } %>
+                                        </table>
+                                        <% }); %>
+                                        <h5>Lương tháng</h5>
+                                            <form action="/timerecords" method="POST">
+                                                <label for="month"></label>
+                                                <input name="month" type="date" id="month" required>
+                                                <input type="hidden" name="user"value="<%= users[0].userId %>">
+                                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                                <button type="submit" class="btn btn-primary">Hiển
+                                                    thị</button>
+                                            </form>
+                                            <% } %>
+                                            <div class="container">
+                                                <section class="pagination">
+                                                    <% if (currentPage !==1 && previousPage !==1) { %> 
+                                                        <a href="?page=1">1</a>                                                    
+                                                    <% } %>
+                                                    <% if (hasPreviousPage) { %> 
+                                                        <a href="?page=<%= previousPage %>"><%= previousPage %></a>
+                                                    <% } %>
+                                                        <a href="?page=<%= currentPage %>" class="active"><%= currentPage %></a>
+                                                    <% if (hasNextPage) { %> 
+                                                        <a href="?page=<%= nextPage %>"><%= nextPage %></a>
+                                                    <% } %>
+                                                    <% if (lastPage !== currentPage && nextPage !== lastPage) { %>
+                                                        <a href="?page=<%= lastPage %>"><%= lastPage %></a>                                                      
+                                                    <% } %>
+                                                </section>
+                                            </div>
+            </main>
+            <%- include('../includes/end.ejs') %>

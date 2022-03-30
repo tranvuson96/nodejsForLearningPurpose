@@ -1,0 +1,24 @@
+<%- include('../includes/head.ejs') %>
+</head>
+
+<body>
+    <%- include('../includes/navigation.ejs') %>
+        <h5>Chi tiết lương tháng</h5>
+        <div class="container">
+            <div class="row">
+                <div class="col-3 col-sm-6">
+                    Lương cơ bản : <%= user[0].userId.salaryScale*3000000 %>
+                </div>
+                <div class="col-3 col-sm-6">
+                    giờ làm thêm : <%= overTime %>
+                </div>
+                <div class="col-3 col-sm-6">
+                    giờ làm thiếu : <%= lamthieu %>
+                </div>
+                <div class="col-3 col-sm-6">
+                    Tổng lương : <%= salary %>
+                </div>
+            </div>
+        </div>
+
+<%- include('../includes/end.ejs') %>

@@ -1,0 +1,81 @@
+<div class="backdrop"></div>
+<header class="main-header">
+    <button id="side-menu-toggle">Menu</button>
+    <nav class="main-header__nav">
+        <ul class="main-header__item-list">
+        <% if (isAuthenticated) { %>
+            <% if (role === 'admin' || role === 'manager') { %> 
+                <li class="main-header__item">
+                    <a class="<%= path === '/search' ? 'active' : '' %>" href="/search">Tìm Kiếm</a>
+                </li>           
+            <% } %>
+            <% if (role === 'admin' || role === 'staff') { %> 
+                <li class="main-header__item">
+                    <a class="<%= path === '/user' ? 'active' : '' %>" href="/user/<%= userId %>">Thông Tin Cá Nhân</a>
+                </li>
+                <li class="main-header__item">
+                    <a class="<%= path === '/rollcall' ? 'active' : '' %>" href="/roll-call/<%= userId %>">Điểm Danh</a>
+                </li>
+                <li class="main-header__item">
+                    <a class="<%= path === '/timerecords' ? 'active' : '' %>" href="/timerecords/<%= userId %>">Thông Tin Giờ Làm</a>
+                </li>
+            <% } %>
+            <li class="main-header__item">
+                <a class="<%= path === '/covid-19' ? 'active' : '' %>" href="/covid-19/<%= userId %>">Thông Tin Covid</a>
+            </li>
+        <% } %>
+        </ul>
+        <ul class="main-header__item-list">
+            <% if (!isAuthenticated) { %>
+                <li class="main-header__item">
+                    <a href="/login" class="<%= path === '/login' ? 'active' : '' %>">Đăng Nhập</a>
+                </li>
+            <% } %>
+            <% if (isAuthenticated) { %>
+            <li class="main-header__item">
+                <form action="/logout" method="POST">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <button type="submit">Đăng Xuất</button>
+                </form>
+            </li>
+            <% } %>
+        </ul>
+    </nav>
+</header>
+
+<nav class="mobile-nav">
+    <ul class="mobile-nav__item-list">
+    <% if (isAuthenticated) { %>
+        <% if (role === 'admin' || role === 'manager') { %>
+        <li class="mobile-nav__item">
+            <a class="<%= path === '/search' ? 'active' : '' %>" href="/search">Tìm Kiếm</a>
+        </li>
+        <% } %>
+        <% if (role === 'admin' || role === 'staff') { %> 
+        <li class="mobile-nav__item">
+            <a class="<%= path === '/user' ? 'active' : '' %>" href="/user/<%= userId %>">Thông Tin Cá Nhân</a>
+        </li>
+        <li class="mobile-nav__item">
+            <a class="<%= path === '/rollcall' ? 'active' : '' %>" href="/roll-call/<%= userId %>">Điểm Danh</a>
+        </li>
+        <li class="mobile-nav__item">
+            <a class="<%= path === '/timerecords' ? 'active' : '' %>" href="/timerecords/<%= userId %>">Thông Tin Giờ Làm</a>
+        </li>
+        <li class="mobile-nav__item">
+            <a class="<%= path === '/covid-19' ? 'active' : '' %>" href="covid-19/<%= userId %>">Thông Tin Covid</a>
+        </li>
+        <li class="main-nav__item">
+            <form action="/logout" method="POST">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button type="submit">Đăng Xuất</button>
+            </form>
+        </li>
+        <% } %>
+    <% } %>
+    <% if(!isAuthenticated) { %>
+        <li class="main-nav__item">
+            <a href="/login" class="<%= path === '/login' ? 'active' : '' %>">Đăng Nhập</a>
+        </li>
+    <% } %>
+    </ul>
+</nav>
